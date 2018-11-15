@@ -26,14 +26,14 @@ int main() {
 
     // step through each pseudo position x (i)
     for (unsigned int i = 0; i < map_size; ++i) {
-        float pseudo_position = float(i);
+        auto pseudo_position = float(i);
         // get pseudo ranges
         std::vector<float> pseudo_ranges = pseudo_range_estimator(landmark_positions, pseudo_position);
 
        // print to stdout
-        if (pseudo_ranges.size() >0) {
-            for (unsigned int s = 0; s < pseudo_ranges.size(); ++s) {
-                std::cout << "x: " << i << "\t" << pseudo_ranges[s] << endl;
+        if (!pseudo_ranges.empty()) {
+            for (float pseudo_range : pseudo_ranges) {
+                std::cout << "x: " << i << "\t" << pseudo_range << endl;
             }
             std::cout << "-----------------------" << endl;
         }
@@ -49,8 +49,8 @@ std::vector<float> pseudo_range_estimator(std::vector<float> landmark_positions,
     std::vector<float> pseudo_ranges;
 
     // loop over number of landmarks and estimate pseudo ranges:
-    for(int index = 0; index < landmark_positions.size(); index++) {
-        float delta = landmark_positions[index] - pseudo_position;
+    for (float landmark_position : landmark_positions) {
+        float delta = landmark_position - pseudo_position;
         if (delta > 0) {
            pseudo_ranges.push_back(delta);
         }
@@ -61,3 +61,25 @@ std::vector<float> pseudo_range_estimator(std::vector<float> landmark_positions,
 
     return pseudo_ranges;
 }
+
+/*
+ * udacity solution:
+ *
+ *
+ * /loop over number of landmarks and estimate pseudo ranges:
+        for (unsigned int l=0; l< landmark_positions.size(); ++l) {
+
+            //estimate pseudo range for each single landmark
+            //and the current state position pose_i:
+            float range_l = landmark_positions[l] - pseudo_position;
+
+            //check if distances are positive:
+            if (range_l > 0.0f) {
+                pseudo_ranges.push_back(range_l);
+            }
+        }
+
+    //sort pseudo range vector:
+    sort(pseudo_ranges.begin(), pseudo_ranges.end());
+ *
+ */
