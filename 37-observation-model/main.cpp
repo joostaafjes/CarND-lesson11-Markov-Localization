@@ -74,6 +74,51 @@ float observation_model(std::vector<float> landmark_positions, std::vector<float
     }
 
     return distance_prob;
+
+
+    /* Udacity solution:
+     *
+
+//observation model: calculates likelihood prob term based on landmark proximity
+float observation_model(std::vector<float> landmark_positions, std::vector<float> observations,
+                        std::vector<float> pseudo_ranges, float distance_max,
+                        float observation_stdev) {
+
+    //initialize observation probability:
+    float distance_prob = 1.0f;
+
+    //run over current observation vector:
+    for (unsigned int z=0; z< observations.size(); ++z) {
+
+        //define min distance:
+        float pseudo_range_min;
+
+        //check, if distance vector exists:
+        if(pseudo_ranges.size() > 0) {
+            //set min distance:
+            pseudo_range_min = pseudo_ranges[0];
+            //remove this entry from pseudo_ranges-vector:
+            pseudo_ranges.erase(pseudo_ranges.begin());
+
+        }
+
+    //no or negative distances: set min distance to a large number:
+    else {
+        // Can use infinity or distance_max here
+        pseudo_range_min = std::numeric_limits<const float>::infinity();
+
+    }
+
+        //estimate the probabiity for observation model, this is our likelihood:
+        distance_prob *= Helpers::normpdf(observations[z], pseudo_range_min,
+                                          observation_stdev);
+
+    }
+    return distance_prob;
+}
+
+
+     *
 }
 
 std::vector<float> pseudo_range_estimator(std::vector<float> landmark_positions,
